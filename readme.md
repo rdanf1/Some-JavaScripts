@@ -1,7 +1,10 @@
 # JavaScripting - Utilities
 <h3>1. A video reader with a color invertible transparent background</h3>
-<h4>NB: Styles and Javascript scripts are included in a single html <br>
-        Copy this html locally, nearby the video files you want to see
+<h4>Notes - Installation : <br>
+        Styles and Javascript scripts are included in a single html file<br>
+        Copy this html file locally, nearby the video files you want to see<br>
+        Then launch it with your favourite browser.<br>
+        (no specific types for video are defined : It may works, or not.)
 </h4>
 
 # TODO :
