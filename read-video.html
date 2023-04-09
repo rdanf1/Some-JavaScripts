@@ -50,6 +50,8 @@
         var url = URL.createObjectURL(file);               
         video.innerHTML = '<source src="' + url + '">';
         
+        // kept here (and at load time) for re-inputs after window resize
+        video.setAttribute("width", window.innerWidth + 'px');  
         console.log(video);  // Test modifications of <video element (DR)        
     }
     
