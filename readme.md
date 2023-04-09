@@ -3,4 +3,11 @@
 <h4>NB: Styles and Javascript scripts are included in a single html <br>
         Copy this html locally, nearby the video files you want to see
 </h4>
+
+# TODO :
+<h3>
+    <ol>Select local background image button.</ol>
+    <ol>Refresh screen (simulate ponctual F3 stroke) before video is chosen <br>
+           (must refresh manually before a new video choice to succeed with current version).</ol>
+</h3>
         
