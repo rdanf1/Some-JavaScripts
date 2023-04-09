@@ -14,7 +14,7 @@
   </body>
   <!--*************************************JAVASCRIPT***********************************************-->
   <script>
-    const srcImgBckgrd = '../img2/Thomas_Sully_-_The_Coleman_Sisters.webp';  // Image path for Background
+    const srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';  // Image path for Background
     
     var input  = document.getElementById('myInput'), 
         video  = document.getElementById('myVideo'),
@@ -39,12 +39,13 @@
     };
     
     input.onchange = function () {
+        video.load();
         var file = this.files[0];
         var url = URL.createObjectURL(file);
         video.innerHTML = '<source src="' + url + '">';
         video.setAttribute("width", window.innerWidth + 'px');  // width 1360 for Mine !
         console.log(video);  // Test modifications of <video element (DR)
-        }
+    }
         
   </script>
   <!--*************************************STYLES**************************************************-->
