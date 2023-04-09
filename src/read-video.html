@@ -8,19 +8,24 @@
       <video controls autoplay id="myVideo"></video>
     </main>
     <div id="root_container_overlay">
-      <div><img id="myBackgroundImg" src="https://rdanbdd.alwaysdata.net/static/Wallpaper_Imagine_04_DR.webp">
+      <div><img id="myBackgroundImg"> <!-- src="https://my.website.net/static/Wallpaper_Imagine_04_DR.webp"> I was here : added later by JS script -->
       </div>
     </div>
   </body>
   <!--*************************************JAVASCRIPT***********************************************-->
   <script>
+    const srcImgBckgrd = '../img2/Thomas_Sully_-_The_Coleman_Sisters.webp';  // Image path for Background
+    
     var input  = document.getElementById('myInput'), 
         video  = document.getElementById('myVideo'),
         button = document.getElementById('myInvertButton'),
         img    = document.getElementById('myBackgroundImg');
+        
+    img.setAttribute("src", srcImgBckgrd);                  // Set background image
+        
     var bool   = true;
     button.onclick = function () {
-      if (bool  === true) {
+      if (bool  === true) {                                 // Swap between applying or not applying invertion
         img.setAttribute("style",                           // Fit screen
           "width: 100%; height: 100%; object-fit: contain;\
 -webkit-filter: invert(1);filter: invert(1);");             // Colors Invertion
@@ -32,7 +37,7 @@
       };         
       console.log(img);  // Test modified value
         };
-        
+    
     input.onchange = function () {
         var file = this.files[0];
         var url = URL.createObjectURL(file);
