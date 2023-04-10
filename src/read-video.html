@@ -28,7 +28,7 @@
   </body>
   <!--*************************************JAVASCRIPT***********************************************-->
   <script>
-    const srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';  // button = document.getElementById('myInvertButton'),Image path for Background
+    
     
     var input  = document.getElementById('myInput'), 
         video  = document.getElementById('myVideo'),
@@ -39,16 +39,17 @@
         img    = document.getElementById('myBackgroundImg'),
         fileName = document.getElementById('myFileName'),
         fileInputNbr = 0;
-    
-    buttonInp.onclick = function () {
-   	input.click();
-    }
         
+    const srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';    
     img.setAttribute("src", srcImgBckgrd);                  // Set background image
         
+    buttonInp.onclick = function () {                       // Redefines input button (better look!)
+   	input.click();
+    }
+    
     var bool   = true;
     buttonInv.onclick = function () {
-      if (bool  === true) {                                 // Swap between applying or not applying invertion
+      if (bool  === true) {                                 // Swap between applying or not applying colors invertion
         img.setAttribute("style",                           // Fit screen
           "width: 100%; height: 100%; object-fit: contain;\
 -webkit-filter: invert(1);filter: invert(1);");             // Colors Invertion
@@ -75,7 +76,7 @@
         if (file == null) { fileNbr = 0 };        
         fileInputNbr = fileNbr;  // Can be the same thing eventually...
         
-        video.load();      // Allows new inputs (1+n) to load & start correctly in <video
+        video.load();      // Allows 2d inputs (1+n) to load & start correctly in <video
         
         // INFO : virtual full path is "C:\fakepath\<name of chosen file>" !!! 
         //        =>> Can't save ! See console output ! (idem for BLOB file)
@@ -99,27 +100,25 @@
     	video.setAttribute("width", window.innerWidth + 'px');  // always the same... (mine ~ 1360px)
     } 
 
-    buttonNxt.onclick = function () {
+    buttonNxt.onclick = function () {                // Next button
    	fileInputNbr = fileInputNbr + 1;
    	console.log(fileInputNbr);
    	input.onchange(fileInputNbr);
     }
    
-    buttonPrv.onclick = function () {
+    buttonPrv.onclick = function () {                // Prev button
    	fileInputNbr = fileInputNbr - 1;
    	console.log(fileInputNbr);
    	input.onchange(fileInputNbr);
     }
     
-
-
   </script>
   <!--*************************************STYLES**************************************************-->
   <style>                       /* Optionnals attributes : type="text/css" media="screen" */
     body {
-    	margin: 0;  /* Overrides default to 8px...*/
+    	margin: 0;  /* Overrides default 8px... */
     }
-    #root_container_overlay {
+    #root_container_overlay {      /* 1st div background */
     	pointer-events: none;
     	width: 100vw;
     	height: 100vh;
@@ -130,15 +129,15 @@
     	top: 0px;
     	left: 0px;
     }
-    div div {
+    div div {                      /* 2d div background */
     	flex-grow: 1;
     }
-    #myBackgroundImg {
+    #myBackgroundImg {             /* <img tag */
     	width: 100%;
     	height: 100%;
     	object-fit: contain;
     }
-    p, pre {
+    p, pre {                       /* File texts - after/next to buttons */
      	display: inline;
     }
   </style>
