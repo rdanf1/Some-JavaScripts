@@ -10,7 +10,9 @@
 # TODO :
 <h3>
     <ol>
-    <li>Select local background image button.</li>
+      <li>Select local background image button.</li>
+      <li>Shortcuts (Next, Prev, ...).</li>
+      <li>Faster video controls transitions/mask.</li>
     </ol>
 </h3>
         
