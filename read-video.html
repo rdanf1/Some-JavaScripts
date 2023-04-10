@@ -2,19 +2,23 @@
   <body>
     <!-- - Though, It's UP ! (Said Mr Tournesol) -->
     <footer>
-      <!-- Overrides default of input because input style is no display !!! 
-           And onclick of it is defined as input.click()          -->
-      <button id="myInputButton">Select Videos</button>
        <!-- 'multiple' is html5 for 'multiple="multiple"' :P -->
-      <input style="display:none;" type="file" multiple id="myInput"/>
+      <input style="display:none;" type="file" multiple id="myInput"/>     
       
+      <!-- A button that Overrides defaults "look" of above input, because 
+               1.input style is "display:none;"
+           And 2.onclick of this is defined as input.click() later     -->
+      <button id="myInputButton">Select Videos</button>
+      
+      <!-- Other buttons -->
       <button id="myInvertButton">Invert Background</button>
       <button id="myNextButton">Next-></button>
       <button id="myPrevButton"><-Prev</button>
+      <!-- Filename text - beside buttons : with style "display:inline" : construction later -->
       <p id="myFileName"></p>
     </footer>
     <main>
-      <video controls autoplay id="myVideo"></video>
+      <video controls autoplay id="myVideo"></video>  <!-- Inner Construction later : after input !!! -->
     </main>
     <div id="root_container_overlay">
       <div><img id="myBackgroundImg"> <!-- src="https://my.website.net/static/Wallpaper_Imagine_04_DR.webp"> 
@@ -64,7 +68,7 @@
         if (file == null) { fileNbr = 0 };        
         fileInputNbr = fileNbr;  // Can be a same thing eventually...
         
-        video.load();      // Permits new inputs (1+n) to load & start correctly in video
+        video.load();      // Permits new inputs (1+n) to load & start correctly in <video
         
         // INFO : virtual full path is "C:\fakepath\<name of chosen file>" !!! 
         //        =>> Can't save ! See console output ! (idem for BLOB file)
@@ -75,7 +79,7 @@
         var url = URL.createObjectURL(file);               
         video.innerHTML = '<source src="' + url + '">';
         
-        fileName.innerHTML = file.name; //this.files[0].name;
+        fileName.innerHTML = "File name : " + file.name; //this.files[0].name;
         console.log(fileName);
         // kept here (and at load time) for re-inputs after window resize
         video.setAttribute("width", window.innerWidth + 'px');  
