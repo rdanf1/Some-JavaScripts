@@ -64,18 +64,26 @@
     fileNbr = 0;
     input.onchange = function (fileNbr) {
         // Initial state
-        var file = this.files[fileNbr];
-        if (file == null) { fileNbr = 0 };        
-        fileInputNbr = fileNbr;  // Can be a same thing eventually...
         
-        video.load();      // Permits new inputs (1+n) to load & start correctly in <video
+        // "this.files" is tricky to sort... => google search string = "sort objects by names javascript"
+        // Got it From 3rd result : 
+        //    https://stackoverflow.com/questions/1424196/how-to-sort-javascript-object-array-by-element-name
+        //
+        var filesSorted = [].slice.call(this.files).sort(function(a, b) { return 2 * (a.name > b.name) - 1; });
+        
+        var file = filesSorted[fileNbr];
+        if (file == null) { fileNbr = 0 };        
+        fileInputNbr = fileNbr;  // Can be the same thing eventually...
+        
+        video.load();      // Allows new inputs (1+n) to load & start correctly in <video
         
         // INFO : virtual full path is "C:\fakepath\<name of chosen file>" !!! 
         //        =>> Can't save ! See console output ! (idem for BLOB file)
         console.log(input.value);
         
         // Construction of video inner <source src=...
-        file = this.files[fileNbr];     // is tmp BLOB from/not real file (can't save/re-use - I dunno how...)
+        //file = this.files[fileNbr];     // is tmp BLOB from/not real file (can't save/re-use - I dunno how...)
+        file = filesSorted[fileNbr];
         var url = URL.createObjectURL(file);               
         video.innerHTML = '<source src="' + url + '">';
         
