@@ -1,30 +1,53 @@
 <!DOCTYPE html>
   <body>
-    <footer>                                 <!-- - Though, It's UP ! (Said Mr Tournesol) -->
-      <input type="file" id="myInput"/>
+    <!-- - Though, It's UP ! (Said Mr Tournesol) -->
+    <footer>
+       <!-- 'multiple' is html5 for 'multiple="multiple"' :P -->
+      <input style="display:none;" type="file" multiple id="myInput"/>     
+      
+      <!-- A button that Overrides defaults "look" of above input, because 
+               1.input style is "display:none;"
+           And 2.onclick of this is defined as input.click() later     -->
+      <button id="myInputButton">Select Videos</button>
+      
+      <!-- Other buttons -->
       <button id="myInvertButton">Invert Background</button>
+      <button id="myNextButton">Next-></button>
+      <button id="myPrevButton"><-Prev</button>
+      <!-- Filename text - beside buttons : with style "display:inline" : construction later -->
+      <p id="myFileName"></p>
     </footer>
     <main>
-      <video controls autoplay id="myVideo"></video>
+      <video controls autoplay id="myVideo"></video>  <!-- Inner Construction later : after input !!! -->
     </main>
     <div id="root_container_overlay">
-      <div><img id="myBackgroundImg"> <!-- src="https://my.website.net/static/Wallpaper_Imagine_04_DR.webp"> I was here : added later by JS script -->
+      <div><img id="myBackgroundImg"> <!-- src="https://my.website.net/static/Wallpaper_Imagine_04_DR.webp"> 
+                                                I was here : added later by JS script -->
       </div>
     </div>
   </body>
   <!--*************************************JAVASCRIPT***********************************************-->
   <script>
-    const srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';  // Image path for Background
+    const srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';  // button = document.getElementById('myInvertButton'),Image path for Background
     
     var input  = document.getElementById('myInput'), 
         video  = document.getElementById('myVideo'),
-        button = document.getElementById('myInvertButton'),
-        img    = document.getElementById('myBackgroundImg');
+        buttonNxt = document.getElementById('myNextButton'),
+        buttonPrv = document.getElementById('myPrevButton'),
+        buttonInv = document.getElementById('myInvertButton'),
+        buttonInp = document.getElementById('myInputButton'),
+        img    = document.getElementById('myBackgroundImg'),
+        fileName = document.getElementById('myFileName'),
+        fileInputNbr = 0;
+    
+    buttonInp.onclick = function () {
+   	input.click();
+    }
         
     img.setAttribute("src", srcImgBckgrd);                  // Set background image
         
     var bool   = true;
-    button.onclick = function () {
+    buttonInv.onclick = function () {
       if (bool  === true) {                                 // Swap between applying or not applying invertion
         img.setAttribute("style",                           // Fit screen
           "width: 100%; height: 100%; object-fit: contain;\
@@ -36,17 +59,60 @@
         bool = true;
       };         
       console.log(img);  // Test modified value
-    };
-    
-    input.onchange = function () {
-        video.load();
-        var file = this.files[0];
-        var url = URL.createObjectURL(file);
-        video.innerHTML = '<source src="' + url + '">';
-        video.setAttribute("width", window.innerWidth + 'px');  // width 1360 for Mine !
-        console.log(video);  // Test modifications of <video element (DR)
     }
+    
+    fileNbr = 0;
+    input.onchange = function (fileNbr) {
+        // Initial state
         
+        // "this.files" is tricky to sort... => google search string = "sort objects by names javascript"
+        // Got it From 3rd result : 
+        //    https://stackoverflow.com/questions/1424196/how-to-sort-javascript-object-array-by-element-name
+        //
+        var filesSorted = [].slice.call(this.files).sort(function(a, b) { return 2 * (a.name > b.name) - 1; });
+        
+        var file = filesSorted[fileNbr];
+        if (file == null) { fileNbr = 0 };        
+        fileInputNbr = fileNbr;  // Can be the same thing eventually...
+        
+        video.load();      // Allows new inputs (1+n) to load & start correctly in <video
+        
+        // INFO : virtual full path is "C:\fakepath\<name of chosen file>" !!! 
+        //        =>> Can't save ! See console output ! (idem for BLOB file)
+        console.log(input.value);
+        
+        // Construction of video inner <source src=...
+        //file = this.files[fileNbr];     // is tmp BLOB from/not real file (can't save/re-use - I dunno how...)
+        file = filesSorted[fileNbr];
+        var url = URL.createObjectURL(file);               
+        video.innerHTML = '<source src="' + url + '">';
+                    // <Using <pre> tag to insert many spaces   // this.files[FileNbr].name;
+        fileName.innerHTML = "<pre>  ---  </pre>" + "File name : " + file.name + "<pre>  ---  </pre>"; 
+        console.log(fileName);
+        // kept here (and at load time) for re-inputs after window resize
+        video.setAttribute("width", window.innerWidth + 'px');  
+        console.log(video);  // Test modifications of <video element (DR)        
+    }
+    
+    // Fixed values for video ( defined when loading page )
+    window.onload = function() {
+    	video.setAttribute("width", window.innerWidth + 'px');  // always the same... (mine ~ 1360px)
+    } 
+
+    buttonNxt.onclick = function () {
+   	fileInputNbr = fileInputNbr + 1;
+   	console.log(fileInputNbr);
+   	input.onchange(fileInputNbr);
+    }
+   
+    buttonPrv.onclick = function () {
+   	fileInputNbr = fileInputNbr - 1;
+   	console.log(fileInputNbr);
+   	input.onchange(fileInputNbr);
+    }
+    
+
+
   </script>
   <!--*************************************STYLES**************************************************-->
   <style>                       /* Optionnals attributes : type="text/css" media="screen" */
@@ -71,6 +137,9 @@
     	width: 100%;
     	height: 100%;
     	object-fit: contain;
+    }
+    p, pre {
+     	display: inline;
     }
   </style>
 </html>
