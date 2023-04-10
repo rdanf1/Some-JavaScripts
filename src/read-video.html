@@ -96,8 +96,6 @@
         // kept here (and at load time) for re-inputs after window resize
         video.setAttribute("width", window.innerWidth + 'px');  
         console.log(video);  // Test modifications of <video element (DR)
-        
-        window.scrollTo({ left: 0, bottom: document.body.scrollHeight, behavior: "smooth" });
          	
     }
     
@@ -133,7 +131,7 @@
     	}
     }
     
-    buttonHid.onclick = function HideFooter() {
+    buttonHid.onclick = function HideFooter() {  // HIDE BUTTONS MENU ( press h to unhide ! )
     	var display = myFooter.style.display;
     	if(display=="none")
         	myFooter.style.display="block";
