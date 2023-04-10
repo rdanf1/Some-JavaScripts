@@ -86,8 +86,8 @@
         file = filesSorted[fileNbr];
         var url = URL.createObjectURL(file);               
         video.innerHTML = '<source src="' + url + '">';
-        
-        fileName.innerHTML = "File name : " + file.name; //this.files[0].name;
+                    // <Using <pre> tag to insert many spaces   // this.files[FileNbr].name;
+        fileName.innerHTML = "<pre>  ---  </pre>" + "File name : " + file.name + "<pre>  ---  </pre>"; 
         console.log(fileName);
         // kept here (and at load time) for re-inputs after window resize
         video.setAttribute("width", window.innerWidth + 'px');  
@@ -138,7 +138,7 @@
     	height: 100%;
     	object-fit: contain;
     }
-    p {
+    p, pre {
      	display: inline;
     }
   </style>
