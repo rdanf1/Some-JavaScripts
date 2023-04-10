@@ -1,19 +1,20 @@
 <!DOCTYPE html>
   <body>
     <!-- - Though, It's UP ! (Said Mr Tournesol) -->
-    <footer>
+    <footer id="myFooter">
        <!-- 'multiple' is html5 for 'multiple="multiple"' :P -->
       <input style="display:none;" type="file" multiple id="myInput"/>     
       
       <!-- A button that Overrides defaults "look" of above input, because 
                1.input style is "display:none;"
            And 2.onclick of this is defined as input.click() later     -->
-      <button id="myInputButton">Select Videos</button>
+      <button id="myInputButton">(S)elect Videos</button>
       
       <!-- Other buttons -->
-      <button id="myInvertButton">Invert Background</button>
-      <button id="myNextButton">Next-></button>
-      <button id="myPrevButton"><-Prev</button>
+      <button id="myInvertButton">(I)nvert Background</button>
+      <button id="myNextButton">(N)ext-></button>
+      <button id="myPrevButton"><-(B)ack</button>
+      <button id="myHideButton">^(H)ide^</button>
       <!-- Filename text - beside buttons : with style "display:inline" : construction later -->
       <p id="myFileName"></p>
     </footer>
@@ -31,14 +32,16 @@
     
     
     var input  = document.getElementById('myInput'), 
-        video  = document.getElementById('myVideo'),
+        fileInputNbr = 0,
+        buttonInp = document.getElementById('myInputButton'),
         buttonNxt = document.getElementById('myNextButton'),
         buttonPrv = document.getElementById('myPrevButton'),
         buttonInv = document.getElementById('myInvertButton'),
-        buttonInp = document.getElementById('myInputButton'),
+        fileName  = document.getElementById('myFileName'),
+        footer    = document.getElementById('myFooter'),
+        buttonHid = document.getElementById('myHideButton'),
         img    = document.getElementById('myBackgroundImg'),
-        fileName = document.getElementById('myFileName'),
-        fileInputNbr = 0;
+        video  = document.getElementById('myVideo');
         
     const srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';    
     img.setAttribute("src", srcImgBckgrd);                  // Set background image
@@ -92,7 +95,10 @@
         console.log(fileName);
         // kept here (and at load time) for re-inputs after window resize
         video.setAttribute("width", window.innerWidth + 'px');  
-        console.log(video);  // Test modifications of <video element (DR)        
+        console.log(video);  // Test modifications of <video element (DR)
+        
+        window.scrollTo({ left: 0, bottom: document.body.scrollHeight, behavior: "smooth" });
+         	
     }
     
     // Fixed values for video ( defined when loading page )
@@ -110,6 +116,29 @@
    	fileInputNbr = fileInputNbr - 1;
    	console.log(fileInputNbr);
    	input.onchange(fileInputNbr);
+    }
+    
+    document.onkeyup=function(e) {         // Shortcuts NEXT/PREV and demonstrate use of $("#id") is JQuery Only.
+    	var e = e || window.event;
+  	if (e.which == 66) {			// "b" pressed (previous video)
+    		buttonPrv.click();
+  	} else if (e.which == 78) {		// "n" pressed (next video) 
+    		buttonNxt.click();
+    	} else if (e.which == 72) {		// "h" pressed (unhide/hide buttons)
+    		buttonHid.click(); 
+    	} else if (e.which == 83) {		// "s" pressed (Select videos input) 
+    		buttonInp.click();
+    	} else if (e.which == 73) {		// "i" pressed (invert background color)
+    		buttonInv.click(); 
+    	}
+    }
+    
+    buttonHid.onclick = function HideFooter() {
+    	var display = myFooter.style.display;
+    	if(display=="none")
+        	myFooter.style.display="block";
+    	else
+        	myFooter.style.display="none";
     }
     
   </script>
