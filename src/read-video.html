@@ -1,6 +1,6 @@
 <!DOCTYPE html>
   <body>
-    <!-- - Though, It's UP ! (Said Mr Tournesol) -->
+    <!-- - Though, It's UP ! (Said Mr Tournesol - no HEAD...) -->
     <footer id="myFooter">
        <!-- 'multiple' is html5 for 'multiple="multiple"' :P -->
       <input style="display:none;" type="file" multiple id="myInput"/>     
@@ -19,7 +19,7 @@
       <p id="myFileName"></p>
     </footer>
     <main>
-      <video controls autoplay id="myVideo"></video>  <!-- Inner Construction later : after input !!! -->
+      <video id="myVideo" controls autoplay></video>  <!-- Inner Construction later : after input !!! -->
     </main>
     <div id="root_container_overlay">
       <div><img id="myBackgroundImg"> <!-- src="https://my.website.net/static/Wallpaper_Imagine_04_DR.webp"> 
@@ -27,9 +27,12 @@
       </div>
     </div>
   </body>
+  
   <!--*************************************JAVASCRIPT***********************************************-->
+  
   <script>
     
+    // JS VARS //
     
     var input  = document.getElementById('myInput'), 
         fileInputNbr = 0,
@@ -41,6 +44,7 @@
         footer    = document.getElementById('myFooter'),
         buttonHid = document.getElementById('myHideButton'),
         img    = document.getElementById('myBackgroundImg'),
+        backRoot = document.getElementById('root_container_overlay'),
         video  = document.getElementById('myVideo');
         
     const srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';    
@@ -65,6 +69,8 @@
       console.log(img);  // Test modified value
     }
     
+    //   INPUT ONCHANGE //
+    
     fileNbr = 0;
     input.onchange = function (fileNbr) {
         // Initial state
@@ -79,6 +85,8 @@
         if (file == null) { fileNbr = 0 };        
         fileInputNbr = fileNbr;  // Can be the same thing eventually...
         
+        GoFullScreen(video);  // Guess It !
+	
         video.load();      // Allows 2d inputs (1+n) to load & start correctly in <video
         
         // INFO : virtual full path is "C:\fakepath\<name of chosen file>" !!! 
@@ -99,10 +107,13 @@
          	
     }
     
-    // Fixed values for video ( defined when loading page )
+    // Fixed values for video ( defined when loading or re-loading the whole web page )
+    
     window.onload = function() {
     	video.setAttribute("width", window.innerWidth + 'px');  // always the same... (mine ~ 1360px)
     } 
+
+    // BUTTONS EVENTS
 
     buttonNxt.onclick = function () {                // Next button
    	fileInputNbr = fileInputNbr + 1;
@@ -116,21 +127,6 @@
    	input.onchange(fileInputNbr);
     }
     
-    document.onkeyup=function(e) {         // Shortcuts NEXT/PREV and demonstrate use of $("#id") is JQuery Only.
-    	var e = e || window.event;
-  	if (e.which == 66) {			// "b" pressed (previous video)
-    		buttonPrv.click();
-  	} else if (e.which == 78) {		// "n" pressed (next video) 
-    		buttonNxt.click();
-    	} else if (e.which == 72) {		// "h" pressed (unhide/hide buttons)
-    		buttonHid.click(); 
-    	} else if (e.which == 83) {		// "s" pressed (Select videos input) 
-    		buttonInp.click();
-    	} else if (e.which == 73) {		// "i" pressed (invert background color)
-    		buttonInv.click(); 
-    	}
-    }
-    
     buttonHid.onclick = function HideFooter() {  // HIDE BUTTONS MENU ( press h to unhide ! )
     	var display = myFooter.style.display;
     	if(display=="none")
@@ -139,8 +135,96 @@
         	myFooter.style.display="none";
     }
     
+    
+    var videoOpacity = 1.00;
+    var backOpacity = 0.24;
+    var backOnOff = new Boolean(true);
+    
+    document.onkeyup=function(e) {         // Shortcuts NEXT/PREV and demonstrate use of $("#id") is JQuery Only.
+    	var e = e || window.event;
+  	if (e.key == "b") {			// "b" pressed (previous video)
+    		buttonPrv.click();
+  	} else if (e.key == "n") {		// "n" pressed (next video) 
+    		buttonNxt.click();
+    	} else if (e.key == "h") {		// "h" pressed (unhide/hide buttons)
+    		buttonHid.click(); 
+    	} else if (e.key == "s") {		// "s" pressed (Select videos input) 
+    		buttonInp.click();
+    	} else if (e.key == "i") {		// "i" pressed (invert background color)event.shiftKey
+    		buttonInv.click(); 
+    	} else if (e.key == "o") {		// "o" undocumented ( decrease video opacity : for fullscreen )
+    		videoOpacity = videoOpacity - 0.06;
+    		video.setAttribute("style", 'opacity: ' + videoOpacity);
+    		console.log(video);
+    	} else if (e.key == "Shift") { 		// "Shift" undocumented ( unset video opacity )
+    		videoOpacity = 1.00;
+    		video.setAttribute("style", 'opacity: ' + videoOpacity);
+    		console.log(video);
+    	} else if (e.key == "p") {		// "p" undocumented ( decrease background img opacity )
+    		backOpacity = backOpacity - 0.04;
+    		backRoot.setAttribute("style", 'opacity: ' + backOpacity);
+    		console.log(video);       
+                         // "Ctrl" undocumented ( reset backgrnd img on top ! or to default alterntively !!! )
+    	} else if (e.key == "Control") {  
+    		backOnOff === true ? backOpacity = 1.00 : backOpacity = 0.24;
+    		backOnOff = !(backOnOff);      // Use "p" to attenuate "top" Please and "- Keep Control !!!"
+    		console.log(backOnOff);
+    		backRoot.setAttribute("style", 'opacity: ' + backOpacity);  // NB : Useless on fullscreen !IMPORTANT
+    		console.log(video);
+    	}
+    }
+    
+    // I just have created my first (standing alone) JS function !
+    
+    function GoFullScreen(element) {
+    	// Go Fullscreen (tries - no IE case :P )
+        var el = element
+   	 , rfs = // for newer Webkit and Firefox
+           el.requestFullscreen
+        || el.webkitRequestFullScreen
+        || el.mozRequestFullScreen
+        || el.msRequestFullscreen;
+	if(typeof rfs!="undefined" && rfs){
+  		rfs.call(el);
+	}
+    }
+    
+     // Some tries for default opacity values depending on Fullscreen status (& double-clicks)
+ // //( despite an fs detection not quite reliable, it works in all cases (except if you strike Ctrl key twice...)
+    ///   ^   ^    ^      ^^      ^    ^         ^   ^    ^^    -       ^   --  - -POO-R--S -RH---YMI-NG PA-TTERNS !
+     
+     fsBool = false;
+    
+     window.onchange = function () {  
+    	if (!window.screenTop && !window.screenY) {
+ 	 // it's fullscreen!
+	video.setAttribute("style", 'opacity: ' + 0.80);
+	fsBool = true;
+    	} else {
+	video.setAttribute("style", 'opacity: ' + 1.00);
+    	}
+     } 
+     
+     addEventListener("dblclick", (event) => {});   // Double clicks 
+                                                    // swap between fullscreen or not fullscreen (the Question !)
+     ondblclick = (event) => {
+     	fsBool ? video.setAttribute("style", 'opacity: ' + 0.80)
+     	       : video.setAttribute("style", 'opacity: ' + 1.00);
+     	fsBool = !(fsBool);
+     	};
+    
+  /*  document.onkeydown=function(e) {         // Shortcuts NEXT/PREV and demonstrate use of $("#id") is JQuery Only.
+    	var e = e || window.event;
+  	if (e.key == 66) {			// "b" pressed (previous video)
+    		buttonPrv.click();
+  	} else if (e.which == 78) {		// "n" pressed (next video) 
+    		buttonNxt.click();
+    	} else if (e.which == 72) {		// "h" pressed (unhide/hide buttons) */
+    	
   </script>
+  
   <!--*************************************STYLES**************************************************-->
+  
   <style>                       /* Optionnals attributes : type="text/css" media="screen" */
     body {
     	margin: 0;  /* Overrides default 8px... */
@@ -150,7 +234,7 @@
     	width: 100vw;
     	height: 100vh;
     	position: fixed;
-    	opacity: 0.26;
+    	opacity: 0.24;
     	z-index: 1000000;
     	display: flex;
     	top: 0px;
@@ -167,5 +251,13 @@
     p, pre {                       /* File texts - after/next to buttons */
      	display: inline;
     }
+    video::backdrop {    /* Fullscreen with background image preserved or redefined (1/2) */
+   	opacity: 1.0;      /* reduce to see other background img : 1.0 to see exclusively this img */ 
+    	background-image : url("../img2/Wallpaper_Imagine_04_DR.webp"); /* Static "- At this moment..." */
+    }
+    video {	    /* Fullscreen with background image preserved - lighten contents ! (2/2) */  
+    	opacity: 1.0;	 /* OK reduce to see other img-s - or use "o" key (OK ?!..) or SHIFT = 1.0 */
+    }		/* in backdrop mode (fullscreen) enhance 2d background image (defined in upper selector) 
+    	
   </style>
 </html>
