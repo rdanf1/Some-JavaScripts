@@ -16,7 +16,7 @@
 </h3>
 <br>
 # DONE :
-<h3>
+<h4>
     <ol>
       <li>Choose local videos for playing (with background image).</li>
       <li>Buttons and shortcuts (Next, Prev, Invert background...).</li>
@@ -25,5 +25,5 @@
       <li>Just give a try with : "o", "Shift", "p", "Ctrl"</li>
       <li>Did you try "DbleClick" ?!..</li>
     </ol>
-</h3>
+</h4>
         
