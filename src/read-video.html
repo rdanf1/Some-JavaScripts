@@ -46,9 +46,10 @@
         img    = document.getElementById('myBackgroundImg'),
         backRoot = document.getElementById('root_container_overlay'),
         video  = document.getElementById('myVideo');
-        
-    const srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';    
-    img.setAttribute("src", srcImgBckgrd);                  // Set background image
+    
+    // TODO: Input both images (1 more button on top right corner)
+    const srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';
+    img.setAttribute("src", srcImgBckgrd);                  // Set background <img image
         
     buttonInp.onclick = function () {                       // Redefines input button (better look!)
    	input.click();
@@ -207,7 +208,7 @@
      
      addEventListener("dblclick", (event) => {});   // Double clicks 
                                                     // swap between fullscreen or not fullscreen (the Question !)
-     ondblclick = (event) => {
+     ondblclick = (event) => {			// NB: If inverted do fast repeated clicks will re-order IT ! (sorry)
      	fsBool ? video.setAttribute("style", 'opacity: ' + 0.80)
      	       : video.setAttribute("style", 'opacity: ' + 1.00);
      	fsBool = !(fsBool);
@@ -220,7 +221,33 @@
   	} else if (e.which == 78) {		// "n" pressed (next video) 
     		buttonNxt.click();
     	} else if (e.which == 72) {		// "h" pressed (unhide/hide buttons) */
-    	
+
+    //
+    // MIGRATED FROM STATIC CSS DEFINITIONS ( need to be changed eventually ! ) //
+    //
+    
+    var backImg = "../img2/Wallpaper_Imagine_04_DR.webp"; 
+    // Array of texts with selectors and their attributes:values 
+    const selectorsAdded = ['#myVideo::backdrop{background-image : url("'                   // at this moment
+    				+ backImg + '");opacity: 1.00;border: #800 solid 2px;}'];  // 1 single value
+    
+    function AddStyleToMain(selectorsAdded) {
+      const main = document.querySelector("main"); // Sample querySelector */
+    
+        // TODO: Input both (1 more button on top right corner)
+      const addStyle = document.createElement("style");
+                // Using += on null is ok ?!.. (open for other additions) 
+      addStyle.innerHTML  += selectorsAdded[0];                        // TODO: Append array of selectors...
+//    addStyle.innerHTML += '#myVideo:hover{border: #800 solid 5px;}'; // For testing (reduce video scale :P!)
+      
+      main.appendChild(addStyle);  // Add style section after main !!!
+      console.log(main);  // Check !
+    }
+    
+    AddStyleToMain(selectorsAdded);
+
+//  main.removeChild(scrollbar);
+
   </script>
   
   <!--*************************************STYLES**************************************************-->
@@ -251,13 +278,16 @@
     p, pre {                       /* File texts - after/next to buttons */
      	display: inline;
     }
-    video::backdrop {    /* Fullscreen with background image preserved or redefined (1/2) */
-   	opacity: 1.0;      /* reduce to see other background img : 1.0 to see exclusively this img */ 
-    	background-image : url("../img2/Wallpaper_Imagine_04_DR.webp"); /* Static "- At this moment..." */
-    }
-    video {	    /* Fullscreen with background image preserved - lighten contents ! (2/2) */  
-    	opacity: 1.0;	 /* OK reduce to see other img-s - or use "o" key (OK ?!..) or SHIFT = 1.0 */
-    }		/* in backdrop mode (fullscreen) enhance 2d background image (defined in upper selector) 
+    
+    /*^^^ MIGRATED IN JS part above (COMMENTS STILL APPLIES) ^^^*/
+/*    video::backdrop {    /* Fullscreen with background image preserved or redefined (1/2) */
+/*   	opacity: 1.0;      /* reduce to see other background img : 1.0 to see exclusively this img */ 
+/*  	background-image : url("../img2/Wallpaper_Imagine_04_DR.webp"); /* Static "- At this moment..." */
+/*    } */
+    /*^^^ MIGRATED IN JS part above (COMMENTS STILL APPLIES) ^^^*/
+/*    video {	    /* Fullscreen with background image preserved - lighten contents ! (2/2) */  
+/*    	opacity: 1.0;	 /* OK reduce to see other img-s - or use "o" key (OK ?!..) or SHIFT = 1.0 */
+/*    }		/* in backdrop mode (fullscreen) enhance 2d background image (defined in upper selector) 
     	
   </style>
 </html>
