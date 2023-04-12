@@ -26,6 +26,7 @@
       <li>Play with background opacities (un-documented shortcuts)</li>
       <li>Just give a try with : "o", "Shift", "p", "Ctrl"</li>
       <li>Did you try "DbleClick" ?!..</li>
+      <li>Did you try "SLOW DbleClick" ?!.. (LOL)</li>
     </ol>
 </h4>
         
