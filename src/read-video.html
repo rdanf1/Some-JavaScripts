@@ -170,10 +170,17 @@
     	} else if (e.key == "Control") {  
     		backOnOff === true ? backOpacity = 1.00 : backOpacity = 0.24;
     		backOnOff = !(backOnOff);      // Use "p" to attenuate "top" Please and "- Keep Control !!!"
-    		console.log(backOnOff);
     		backRoot.setAttribute("style", 'opacity: ' + backOpacity);  // NB : Useless on fullscreen !IMPORTANT
     		console.log(video);
+    	} else if (e.key == "j") {
+    		// Reset <style> in <main> // Cf functions definitions later...
+    		DelStyleToMain();  
+    		invBck === true ? AddStyleToMain(selectorsAddedInv) : AddStyleToMain(selectorsAdded);
+    		invBck = !(invBck);    
+    		console.log(bckInv);
     	}
+    	
+    		
     }
     
     // I just have created my first (standing alone) JS function !
@@ -197,8 +204,9 @@
      
      fsBool = false;
     
-     window.onchange = function () {  
-    	if (!window.screenTop && !window.screenY) {
+     // window.onchange = function () {                   // That's a bit too global (should limit on video)
+    window.onchange = function () { 
+    	if (!window.screenTop && !window.screenY) {         // Were "!window."
  	 // it's fullscreen!
 	video.setAttribute("style", 'opacity: ' + 0.80);
 	fsBool = true;
@@ -226,28 +234,43 @@
     //
     // MIGRATED FROM STATIC CSS DEFINITIONS ( need to be changed eventually ! ) //
     //
-    
+
+    // TODO: Input both (1 more button on top right corner)    
     var backImg = "../img2/Wallpaper_Imagine_04_DR.webp"; 
     // Array of texts with selectors and their attributes:values 
     const selectorsAdded = ['#myVideo::backdrop{background-image : url("'                   // at this moment
-    				+ backImg + '");opacity: 1.00;border: #800 solid 2px;}'];  // 1 single value
-    
-    function AddStyleToMain(selectorsAdded) {
-      const main = document.querySelector("main"); // Sample querySelector */
-    
-        // TODO: Input both (1 more button on top right corner)
-      const addStyle = document.createElement("style");
-                // Using += on null is ok ?!.. (open for other additions) 
-      addStyle.innerHTML  += selectorsAdded[0];                        // TODO: Append array of selectors...
-//    addStyle.innerHTML += '#myVideo:hover{border: #800 solid 5px;}'; // For testing (reduce video scale :P!)
-      
++ backImg + '");opacity: 1.00;border: #800 solid 2px;}'];  // single
+    // For when invert of background backdrop image is required ( shortcut = "j" )
+    const selectorsAddedInv = ['#myVideo::backdrop{background-image : url("'                   // at this moment
++ backImg + '");opacity: 1.00;border: #800 solid 2px;-webkit-filter: invert(1); filter:invert(1);}'];  // single
+
+    // Once !
+    const main = document.querySelector("main"); // QuerySelector */
+    const addStyle = document.createElement("style");
+         
+    function AddStyleToMain(selectorsAdded) {      
+      // TODO: Append array of selectors...
+      addStyle.innerHTML  = selectorsAdded[0];    
+//    addStyle.innerHTML += '#myVideo:hover{border: #800 solid 5px;}'; // For testing (reduce video scale :P!)      
       main.appendChild(addStyle);  // Add style section after main !!!
       console.log(main);  // Check !
     }
     
+    function DelStyleToMain() {
+      main.removeChild(addStyle);
+    }
+    
+    // Initially Backdrop Image is not inverted
+    var invBck = false;
+    
+    // Apply appended "style" to main
     AddStyleToMain(selectorsAdded);
-
-//  main.removeChild(scrollbar);
+    
+    
+    
+    
+    
+//  main.removeChild(scrollbar); // Sample removeChild
 
   </script>
   
