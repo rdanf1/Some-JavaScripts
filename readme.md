@@ -26,6 +26,7 @@
       <li>Just give a try with : "o", "Shift", "p", "Ctrl"</li>
       <li>Did you try "DbleClick" ?!..</li>
       <li>Did you try "SLOW DbleClick" ?!.. (LOL)</li>
+      <li>Choose local background images (2 max)</li>
     </ol>
 </h4>
-        
+
