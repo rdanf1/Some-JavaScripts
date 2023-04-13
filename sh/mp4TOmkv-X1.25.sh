@@ -24,7 +24,7 @@ for i in $(/usr/bin/ls -rt *$1*.mp4) ;
 exit 0
 
 #
-# Commande à utiliser pour lancer ce script dans les sous-dossier d'un module :
+# Commande à utiliser pour lancer ce script dans les sous-dossier d'une arborescence :
 # 
 for i in $(find . -type d | xargs| sed 's/\. //'); do cd $i && pwd ; ~/Vidéos/mp4TOmkv-X1.25.sh && cd .. ; done
 
