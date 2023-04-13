@@ -108,16 +108,29 @@
         //file = this.files[fileNbr];     // is tmp BLOB from/not real file (can't save/re-use - I dunno how...)
         file = filesSorted[fileNbr];
         var url = URL.createObjectURL(file);               
-        video.innerHTML = '<source src="' + url + '">';
+        video.innerHTML = '<source id="myVideoSrc" src="' + url + '">';
                     // <Using <pre> tag to insert many spaces   // this.files[FileNbr].name;
         fileName.innerHTML = "<pre>  ---  </pre>" + "File name : " + file.name + "<pre>  ---  </pre>"; 
         console.log(fileName);
         // kept here (and at load time) for re-inputs after window resizne
-        video.setAttribute("width", window.innerWidth + 'px');  
+        video.setAttribute("width", window.innerWidth + 'px');
+        
+        // Only mkv works "as is" ( on Chrome ! )
+   // --->>> This type extension specification NEVER works with file blob name (SHIT) <<<---
+/*        videoSrc = document.getElementById('myVideoSrc');
+        var fileExtension = getFileExtension(file.name);
+        if ( fileExtension != "mkv" ) {
+        	 videoSrc.setAttribute("type","video/" + fileExtension);
+        	 videoSrc.setAttribute("plays-inline","");
+        }
+*/
         console.log(video);  // Test modifications of <video element (DR)
-         	
     }
     
+/*    function getFileExtension (filename) {
+    	return filename.split('.').pop();
+    }
+*/    
     // Same as above for 2 local images files input ( few checks... )    
     input2.onchange = function () {
         // I like slices...
@@ -160,7 +173,7 @@
     // Fixed values for video ( defined when loading or re-loading the whole web page )
     
     window.onload = function() {
-    	video.setAttribute("width", window.innerWidth + 'px');  // always the same... (mine ~ 1360px)
+  	video.setAttribute("width", window.innerWidth + 'px');  // always the same... (mine ~ 1360px)
     } 
 
     // BUTTONS EVENTS

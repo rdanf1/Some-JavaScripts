@@ -10,10 +10,10 @@
 # TODO :
 <h3>
     <ol>
-      <li>Make mp4 videos readable (doctype thing to append).</li>
       <li>Faster video controls transitions/mask.</li>
       <li>Extention package. <br>
              (with "NO" - I mean "NOT ANY" - ads)</li>
+      <li>Find out what's wrong with non mkv video files...</li>
     </ol>
 </h3>
 <br>
@@ -29,6 +29,7 @@
       <li>Did you try "SLOW DbleClick" ?!.. (LOL)</li>
       <li>Choose local background images (2 max)</li>
       <li>Did you try to duplicate read_video tab ?</li>
+      <li>Works fine exclusively on Chromebook with mkv files only. (Sorry)</li>
     </ol>
 </h4>
 
