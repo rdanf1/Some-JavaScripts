@@ -92,11 +92,14 @@
         //
         var filesSorted = [].slice.call(this.files).sort(function(a, b) { return 2 * (a.name > b.name) - 1; });
         
+        console.log(filesSorted[0]);
+        console.log(filesSorted[1]);
+                
         var file = filesSorted[fileNbr];
         if (file == null) { fileNbr = 0 };        
         fileInputNbr = fileNbr;  // Can be the same thing eventually...
         
-        GoFullScreen(video);  // Guess It !
+        // GoFullScreen(video);  // Guess It !
 	
         video.load();      // Allows 2d inputs (1+n) to load & start correctly in <video
         
@@ -105,7 +108,7 @@
         console.log(input.value);
         
         // Construction of video inner <source src=...
-        //file = this.files[fileNbr];     // is tmp BLOB from/not real file (can't save/re-use - I dunno how...)
+        //file = this.files[fileNbr];   // is tmp BLOB from/not real file (can't save/re-use - I dunno how...)
         file = filesSorted[fileNbr];
         var url = URL.createObjectURL(file);               
         video.innerHTML = '<source id="myVideoSrc" src="' + url + '">';
@@ -115,23 +118,28 @@
         // kept here (and at load time) for re-inputs after window resizne
         video.setAttribute("width", window.innerWidth + 'px');
         
-        // Only mkv works "as is" ( on Chrome ! )
-   // --->>> This type extension specification NEVER works with file blob name (SHIT) <<<---
-/*        videoSrc = document.getElementById('myVideoSrc');
+        // Only mkv works "as is" = no "type" attribute in <source( on Chrome ! ) 
+        // --->>> This type extension specification NEVER works with mkv video/matroska () <<<---
+        //                                         ALWAYS works with mp4 video/mp4 ( and WITHOUT ! )
+                                                            // Painless (& Useless) in <video tag //
+        /*° MEANS : DONT DO AS DOCUMENTED ! => MY MKV WON'T DO IT !!! ("others" mp4 ok !) **/
+        /*  
+        videoSrc = document.getElementById('myVideoSrc');
         var fileExtension = getFileExtension(file.name);
-        if ( fileExtension != "mkv" ) {
-        	 videoSrc.setAttribute("type","video/" + fileExtension);
+        if ( fileExtension != "mk" ) {                  // => preferably in video (painless)
+        	 videoSrc.setAttribute("type", file.type);
         	 videoSrc.setAttribute("plays-inline","");
-        }
-*/
+        } 
+        */
+        
         console.log(video);  // Test modifications of <video element (DR)
     }
-    
-/*    function getFileExtension (filename) {
+      /*    
+    function getFileExtension (filename) {
     	return filename.split('.').pop();
-    }
-*/    
-    // Same as above for 2 local images files input ( few checks... )    
+    } */
+    
+    // Same as above input for 2 local images files input ( few checks... )    
     input2.onchange = function () {
         // I like slices...
         var filesVar = [].slice.call(this.files);
