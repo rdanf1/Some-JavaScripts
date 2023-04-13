@@ -4,12 +4,14 @@
     <!-- - Though, It's UP ! (Said Mr Tournesol - no HEAD...) -->
     <footer id="myFooter">
        <!-- 'multiple' is html5 for 'multiple="multiple"' :P -->
-      <input style="display:none;" type="file" multiple id="myInput"/>     
+      <input style="display:none;" type="file" multiple id="myInput"/>
+      <input style="display:none;" type="file" multiple id="myInput2"/>         
       
       <!-- A button that Overrides defaults "look" of above input, because 
                1.input style is "display:none;"
            And 2.onclick of this is defined as input.click() later     -->
       <button id="myInputButton">(S)elect Videos</button>
+      <button id="myInputButton2">Select Backgroun(d)s</button>
       
       <!-- Other buttons -->
       <button id="myInvertButton">(I)nvert Background</button>
@@ -24,7 +26,7 @@
     </main>
     <div id="root_container_overlay">
       <div><img id="myBackgroundImg"> <!-- src="https://my.website.net/static/Wallpaper_Imagine_04_DR.webp"> 
-                                                I was here : added later by JS script -->
+                                                I was here : added later in JS script -->
       </div>
     </div>
   </body>
@@ -35,9 +37,11 @@
     
     // JS VARS //
     
-    var input  = document.getElementById('myInput'), 
+    var input  = document.getElementById('myInput'),
+        input2 = document.getElementById('myInput2'), 
         fileInputNbr = 0,
         buttonInp = document.getElementById('myInputButton'),
+        buttonIn2 = document.getElementById('myInputButton2'),
         buttonNxt = document.getElementById('myNextButton'),
         buttonPrv = document.getElementById('myPrevButton'),
         buttonInv = document.getElementById('myInvertButton'),
@@ -48,32 +52,37 @@
         backRoot = document.getElementById('root_container_overlay'),
         video  = document.getElementById('myVideo');
     
-    // TODO: Input both images (1 more button on top right corner)
-    const srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';
-    img.setAttribute("src", srcImgBckgrd);                  // Set background <img image
-        
+    // TODO: Input button for both backgound images (1 more button on top right corner ?)
+    var srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';     // My initial value ( fix with ur poison )
+    
+    img.setAttribute("src", srcImgBckgrd);                  // Set background <img image (initial props in "static" style) 
+    							         
     buttonInp.onclick = function () {                       // Redefines input button (better look!)
    	input.click();
     }
+    buttonIn2.onclick = function () {                       // Redefines input2 button (better look!)
+   	input2.click();
+    }
+    
     
     var bool   = true;
     buttonInv.onclick = function () {
       if (bool  === true) {                                 // Swap between applying or not applying colors invertion
-        img.setAttribute("style",                           // Fit screen
-          "width: 100%; height: 100%; object-fit: contain;\
+        img.setAttribute("style",                           //             object-fit: cover;); 
+          "object-fit: cover;\
 -webkit-filter: invert(1);filter: invert(1);");             // Colors Invertion
         bool = false;
       } else {
            img.setAttribute("style",                        // Fit screen
-          "width: 100%; height: 100%; object-fit: contain;");
-        bool = true;
+          "object-fit: cover;");		    // centered to Fit screen : cover 
+        bool = true;					// out -> ( height: 100%; object-fit: contain;); 
       };         
       console.log(img);  // Test modified value
     }
     
     //   INPUT ONCHANGE //
     
-    fileNbr = 0;
+    var fileNbr = 0;
     input.onchange = function (fileNbr) {
         // Initial state
         
@@ -108,6 +117,45 @@
         console.log(video);  // Test modifications of <video element (DR)
          	
     }
+    
+    // Same as above for 2 local images files input ( few checks... )    
+    input2.onchange = function () {
+        // I like slices...
+        var filesVar = [].slice.call(this.files);
+        
+        var file1 = filesVar[0];
+        var file2 = filesVar[1];
+        if (file2 == null) { file2 = file1 };        
+                
+        console.log(input2.value);  // Test
+        
+        console.log(file1);
+        console.log(file2);
+
+        // Assign files to img vars (globals)
+        srcImgBckgrd = URL.createObjectURL(file1); 
+        backImg = URL.createObjectURL(file2);               
+
+	console.log(srcImgBckgrd);
+        console.log(backImg);
+
+	// Apply for "normal backgound : <img>"
+        img.setAttribute("src", srcImgBckgrd);
+        
+	// Apply for backdrop backround-image
+	selectorsAdded = ['#myVideo::backdrop{background-image : url("'   // at this moment
++ backImg + '");opacity: 1.00;border: #800 solid 2px;}'];    
+	selectorsAddedInv = ['#myVideo::backdrop{background-image : url("'                           // at this moment
++ backImg + '");opacity: 1.00;border: #800 solid 2px;-webkit-filter: invert(1); filter:invert(1);}'];
+        AddStyleToMain(selectorsAdded);
+        
+        // Fresh restart (Still useful/effective ?)
+        GoFullScreen(video); 	
+        video.load();
+    }
+    
+    
+    
     
     // Fixed values for video ( defined when loading or re-loading the whole web page )
     
@@ -178,6 +226,8 @@
     		invBck === true ? AddStyleToMain(selectorsAddedInv) : AddStyleToMain(selectorsAdded);
     		invBck = !(invBck);    
     		console.log(bckInv);
+    	} else if (e.key == "d") {
+    		buttonIn2.click();
     	}
     	
     		
@@ -198,15 +248,17 @@
 	}
     }
     
+                   // **************************************************************** //
+                   // DONT FORGET TO TRY "SLOW MOTION DOUBLE CLICK"[R] : Click...Click //
+                   // **************************************************************** //
      // Some tries for default opacity values depending on Fullscreen status (& double-clicks)
  // //( despite an fs detection not quite reliable, it works in all cases (except if you strike Ctrl key twice...)
-    ///   ^   ^    ^      ^^      ^    ^         ^   ^    ^^    -       ^   --  - -POO-R--S -RH---YMI-NG PA-TTERNS !
+///       ^   ^    ^      ^^      ^    ^         ^   ^    ^^    -       ^   --  - --POO-R ---S-RH---Y-M-I-N-G PATTERNS !
      
-     fsBool = false;
+    fsBool = false;
     
-     // window.onchange = function () {                   // That's a bit too global (should limit on video)
     window.onchange = function () { 
-    	if (!window.screenTop && !window.screenY) {         // Were "!window."
+    	if (!window.screenTop && !window.screenY) {       // That's a bit too global (should limit on video) => NO !
  	 // it's fullscreen!
 	video.setAttribute("style", 'opacity: ' + 0.80);
 	fsBool = true;
@@ -215,7 +267,7 @@
     	}
      } 
      
-     addEventListener("dblclick", (event) => {});   // Double clicks 
+     addEventListener("dblclick", (event) => {});   // Double clicks (NB: No Bounce neither Throttle timer-ed functions)
                                                     // swap between fullscreen or not fullscreen (the Question !)
      ondblclick = (event) => {			// NB: If inverted do fast repeated clicks will re-order IT ! (sorry)
      	fsBool ? video.setAttribute("style", 'opacity: ' + 0.80)
@@ -223,28 +275,22 @@
      	fsBool = !(fsBool);
      	};
     
-  /*  document.onkeydown=function(e) {         // Shortcuts NEXT/PREV and demonstrate use of $("#id") is JQuery Only.
-    	var e = e || window.event;
-  	if (e.key == 66) {			// "b" pressed (previous video)
-    		buttonPrv.click();
-  	} else if (e.which == 78) {		// "n" pressed (next video) 
-    		buttonNxt.click();
-    	} else if (e.which == 72) {		// "h" pressed (unhide/hide buttons) */
-
-    //
-    // MIGRATED FROM STATIC CSS DEFINITIONS ( need to be changed eventually ! ) //
-    //
+    //                                                                                            //
+    //    MIGRATED FROM STATIC CSS DEFINITIONS ( those that need to be changed eventually ! )     //
+    //                                                                                            //
+    // DR - April 2023 - Found here : https://codepen.io/Realto619/pen/RwMvNrj?editors=0010       //
+    //                                                                                            //
 
     // TODO: Input both (1 more button on top right corner)    
     var backImg = "../img2/Wallpaper_Imagine_04_DR.webp"; 
     // Array of texts with selectors and their attributes:values 
-    const selectorsAdded = ['#myVideo::backdrop{background-image : url("'                   // at this moment
-+ backImg + '");opacity: 1.00;border: #800 solid 2px;}'];  // single
+    var selectorsAdded = ['#myVideo::backdrop{background-image : url("'   // at this moment
++ backImg + '");opacity: 1.00;border: #800 solid 2px;}'];                   // single
     // For when invert of background backdrop image is required ( shortcut = "j" )
-    const selectorsAddedInv = ['#myVideo::backdrop{background-image : url("'                   // at this moment
+    var selectorsAddedInv = ['#myVideo::backdrop{background-image : url("'                           // at this moment
 + backImg + '");opacity: 1.00;border: #800 solid 2px;-webkit-filter: invert(1); filter:invert(1);}'];  // single
 
-    // Once !
+    // Once !   ( "- SURPRISE !!!" : Should appear at begining of JS code section as other "vars declaraions" )
     const main = document.querySelector("main"); // QuerySelector */
     const addStyle = document.createElement("style");
          
@@ -266,12 +312,6 @@
     // Apply appended "style" to main
     AddStyleToMain(selectorsAdded);
     
-    
-    
-    
-    
-//  main.removeChild(scrollbar); // Sample removeChild
-
   </script>
   
   <!--*************************************STYLES**************************************************-->
@@ -297,9 +337,9 @@
     #myBackgroundImg {             /* <img tag */
     	width: 100%;
     	height: 100%;
-    	object-fit: contain;
+    	object-fit: cover;       /* Same as default for bakground-img prop -- was => object-fit: contain;  */
     }
-    p, pre {                       /* File texts - after/next to buttons */
+    p, pre {                     /* File texts - after/next to buttons */
      	display: inline;
     }
     

@@ -10,7 +10,6 @@
 # TODO :
 <h3>
     <ol>
-      <li>Add Select/Change local background image button.</li>
       <li>Faster video controls transitions/mask.</li>
       <li>Extention package. <br>
              (with "NO" - I mean "NOT ANY" - ads)</li>
