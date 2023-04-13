@@ -10,6 +10,7 @@
 # TODO :
 <h3>
     <ol>
+      <li>Make mp4 videos readable (doctype thing to append).</li>
       <li>Faster video controls transitions/mask.</li>
       <li>Extention package. <br>
              (with "NO" - I mean "NOT ANY" - ads)</li>
@@ -27,6 +28,7 @@
       <li>Did you try "DbleClick" ?!..</li>
       <li>Did you try "SLOW DbleClick" ?!.. (LOL)</li>
       <li>Choose local background images (2 max)</li>
+      <li>Did you try to duplicate read_video tab ?</li>
     </ol>
 </h4>
 

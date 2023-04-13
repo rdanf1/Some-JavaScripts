@@ -112,7 +112,7 @@
                     // <Using <pre> tag to insert many spaces   // this.files[FileNbr].name;
         fileName.innerHTML = "<pre>  ---  </pre>" + "File name : " + file.name + "<pre>  ---  </pre>"; 
         console.log(fileName);
-        // kept here (and at load time) for re-inputs after window resize
+        // kept here (and at load time) for re-inputs after window resizne
         video.setAttribute("width", window.innerWidth + 'px');  
         console.log(video);  // Test modifications of <video element (DR)
          	
@@ -229,10 +229,9 @@
     	} else if (e.key == "d") {
     		buttonIn2.click();
     	}
-    	
-    		
     }
-    
+
+
     // I just have created my first (standing alone) JS function !
     
     function GoFullScreen(element) {
@@ -319,6 +318,7 @@
   <style>                       /* Optionnals attributes : type="text/css" media="screen" */
     body {
     	margin: 0;  /* Overrides default 8px... */
+    	overflow: scroll;
     }
     #root_container_overlay {      /* 1st div background */
     	pointer-events: none;
@@ -339,9 +339,18 @@
     	height: 100%;
     	object-fit: cover;       /* Same as default for bakground-img prop -- was => object-fit: contain;  */
     }
-    p, pre {                     /* File texts - after/next to buttons */
-     	display: inline;
-    }
+    p , pre {                 /* File texts - after/next to buttons */
+        position: absolute;   /* Replaced "display: inline;" removed : Cant cut file name when resizing window */
+        top: -15px;           /* ISSUE : When duplicating read_video tab and resizing full screen sized window,*/
+        left: 600px;          /* the file text ( and "pre" deco ) are auto-wrapped on (added) 2d line = HS !!! */
+        white-space: nowrap;  /* No new line is neeed when viewing 2 videos in parallel mode, reduce height! (//) */
+  	overflow: hidden;     /* Usually duplicating involves seing/snapshooting 2 different images of same video*/  
+    }			      /* PS: "pre" decoration is hidden (under <p>) ! (to be removed...)
+                              /* PS2: "- I HATE AUTO-WRAPPING !!!" - DR */
+/* Useless ?!.. */
+/*    @media screen /* and (min-width: 0) and (max-width: 991px) */ /* { 
+   	  overflow: scroll;
+    } */
     
     /*^^^ MIGRATED IN JS part above (COMMENTS STILL APPLIES) ^^^*/
 /*    video::backdrop {    /* Fullscreen with background image preserved or redefined (1/2) */
