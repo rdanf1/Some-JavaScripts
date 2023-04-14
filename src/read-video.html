@@ -15,6 +15,7 @@
       
       <!-- Other buttons -->
       <button id="myInvertButton">(I)nvert Background</button>
+      <button id="myAutoReadButton">(A)uto Read</button>
       <button id="myNextButton">(N)ext-></button>
       <button id="myPrevButton"><-(B)ack</button>
       <button id="myHideButton">^(H)ide^</button>
@@ -42,8 +43,11 @@
         fileInputNbr = 0,
         buttonInp = document.getElementById('myInputButton'),
         buttonIn2 = document.getElementById('myInputButton2'),
+        autoReadVideos = false,
+        buttonAut = document.getElementById('myAutoReadButton'),
         buttonNxt = document.getElementById('myNextButton'),
         buttonPrv = document.getElementById('myPrevButton'),
+        backImgInvert = false;
         buttonInv = document.getElementById('myInvertButton'),
         fileName  = document.getElementById('myFileName'),
         footer    = document.getElementById('myFooter'),
@@ -64,18 +68,18 @@
    	input2.click();
     }
     
-    
-    var bool   = true;
     buttonInv.onclick = function () {
-      if (bool  === true) {                                 // Swap between applying or not applying colors invertion
+      if (!backImgInvert) {                        // Swap between applying or not applying colors invertion
         img.setAttribute("style",                           //             object-fit: cover;); 
           "object-fit: cover;\
 -webkit-filter: invert(1);filter: invert(1);");             // Colors Invertion
-        bool = false;
+        buttonInv.setAttribute("style","color: red; font-weight: bold;");
+        backImgInvert = true;
       } else {
            img.setAttribute("style",                        // Fit screen
           "object-fit: cover;");		    // centered to Fit screen : cover 
-        bool = true;					// out -> ( height: 100%; object-fit: contain;); 
+          backImgInvert = false;  		          // out -> ( height: 100%; object-fit: contain;);
+          buttonInv.removeAttribute("style");
       };         
       console.log(img);  // Test modified value
     }
@@ -206,6 +210,12 @@
         	myFooter.style.display="none";
     }
     
+    buttonAut.onclick = function () {                // Auto Read button
+   	autoReadVideos = !(autoReadVideos);
+        autoReadVideos ? buttonAut.setAttribute("style","color: green; font-weight: bold;") : buttonAut.removeAttribute("style");
+        console.log(autoReadVideos);
+   	console.log(buttonAut);
+    }
     
     var videoOpacity = 1.00;
     var backOpacity = 0.24;
@@ -249,9 +259,17 @@
     		console.log(bckInv);
     	} else if (e.key == "d") {
     		buttonIn2.click();
+    	} else if (e.key == "a") {
+    		buttonAut.click();
     	}
     }
 
+    // Auto reading implementation ( alsmost !like "utu B" ) 
+    video.addEventListener('ended', myAutoRead, false);    // Not sync ! (I think)
+    
+    function myAutoRead(e) {
+        autoReadVideos ? buttonNxt.click() : {} ;  // TODO: Should give it a "bounced" pause with a timer in between... 
+    }
 
     // I just have created my first (standing alone) JS function !
     
@@ -363,7 +381,7 @@
     p , pre {                 /* File texts - after/next to buttons */
         position: absolute;   /* Replaced "display: inline;" removed : Cant cut file name when resizing window */
         top: -15px;           /* ISSUE : When duplicating read_video tab and resizing full screen sized window,*/
-        left: 600px;          /* the file text ( and "pre" deco ) are auto-wrapped on (added) 2d line = HS !!! */
+        left: 700px;          /* the file text ( and "pre" deco ) are auto-wrapped on (added) 2d line = HS !!! */
         white-space: nowrap;  /* No new line is neeed when viewing 2 videos in parallel mode, reduce height! (//) */
   	overflow: hidden;     /* Usually duplicating involves seing/snapshooting 2 different images of same video*/  
     }			      /* PS: "pre" decoration is hidden (under <p>) ! (to be removed...)
