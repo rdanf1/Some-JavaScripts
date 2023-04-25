@@ -28,6 +28,7 @@
       <li>Did you try "SLOW DbleClick" ?!.. (LOL)</li>
       <li>Choose local background images (2 max)</li>
       <li>Did you try to duplicate read_video tab ?</li>
+      <li>Audio clone - for playing audios (Cf !mainBranch)</li>
     </ol>
 </h4>
 
