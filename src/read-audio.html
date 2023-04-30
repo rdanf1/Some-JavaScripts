@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+  <body> 
+     <!-- This is the audio version of read-video.html
+              Practically : same file though I replaced :
+                  1. all "video" to "audio" ( case sensitive )
+                  2. all "Video" to "Audio" ( case sensitive )
+                                             I added his comment too.
+                  3. Plays audios mp3 and mp4 files fine ( but flv dont... )
+     TODOS : - Mix with video-play
+             - Add autohide or hide with (h) the audio controls
+             - simulate video player ::backdrop mode on bouble click ( no more effective here ) 
+     -->
+    <!-- - Though, It's UP ! (Said Mr Tournesol - no HEAD...) -->
+    <footer id="myFooter">
+       <!-- 'multiple' is html5 for 'multiple="multiple"' :P -->
+      <input style="display:none;" type="file" multiple id="myInput"/>
+      <input style="display:none;" type="file" multiple id="myInput2"/>         
+      
+      <!-- A button that Overrides defaults "look" of above input, because 
+               1.input style is "display:none;"
+           And 2.onclick of this is defined as input.click() later     -->
+      <button id="myInputButton">(S)elect Audios</button>
+      <button id="myInputButton2">Select Backgroun(d)s</button>
+      
+      <!-- Other buttons -->
+      <button id="myInvertButton">(I)nvert Background</button>
+      <button id="myAutoReadButton">(A)uto Read</button>
+      <button id="myNextButton">(N)ext-></button>
+      <button id="myPrevButton"><-(B)ack</button>
+      <button id="myHideButton">^(H)ide^</button>
+      <!-- Filename text - beside buttons : with style "display:inline" : construction later -->
+      <p id="myFileName"></p>
+    </footer>
+    <main>
+      <audio id="myAudio" controls autoplay></audio>  <!-- Inner Construction later : after input !!! -->
+    </main>
+    <div id="root_container_overlay">
+      <div><img id="myBackgroundImg"> <!-- src="https://my.website.net/static/Wallpaper_Imagine_04_DR.webp"> 
+                                                I was here : added later in JS script -->
+      </div>
+    </div>
+  </body>
+  
+  <!--*************************************JAVASCRIPT***********************************************-->
+  
+  <script>
+    
+    // JS VARS //
+    
+    var input  = document.getElementById('myInput'),
+        input2 = document.getElementById('myInput2'), 
+        fileInputNbr = 0,
+        buttonInp = document.getElementById('myInputButton'),
+        buttonIn2 = document.getElementById('myInputButton2'),
+        autoReadAudios = false,
+        buttonAut = document.getElementById('myAutoReadButton'),
+        buttonNxt = document.getElementById('myNextButton'),
+        buttonPrv = document.getElementById('myPrevButton'),
+        backImgInvert = false;
+        buttonInv = document.getElementById('myInvertButton'),
+        fileName  = document.getElementById('myFileName'),
+        footer    = document.getElementById('myFooter'),
+        buttonHid = document.getElementById('myHideButton'),
+        img    = document.getElementById('myBackgroundImg'),
+        backRoot = document.getElementById('root_container_overlay'),
+        audio  = document.getElementById('myAudio');
+    
+    // TODO: Input button for both backgound images (1 more button on top right corner ?)
+    var srcImgBckgrd = '../img2/Wallpaper_Imagine_04_DR.webp';     // My initial value ( fix with ur poison )
+    
+    img.setAttribute("src", srcImgBckgrd);                  // Set background <img image (initial props in "static" style) 
+    							         
+    buttonInp.onclick = function () {                       // Redefines input button (better look!)
+   	input.click();
+    }
+    buttonIn2.onclick = function () {                       // Redefines input2 button (better look!)
+   	input2.click();
+    }
+    
+    buttonInv.onclick = function () {
+      if (!backImgInvert) {                        // Swap between applying or not applying colors invertion
+        img.setAttribute("style",                           //             object-fit: cover;); 
+          "object-fit: cover;\
+-webkit-filter: invert(1);filter: invert(1);");             // Colors Invertion
+        buttonInv.setAttribute("style","color: red; font-weight: bold;");
+        backImgInvert = true;
+      } else {
+           img.setAttribute("style",                        // Fit screen
+          "object-fit: cover;");		    // centered to Fit screen : cover 
+          backImgInvert = false;  		          // out -> ( height: 100%; object-fit: contain;);
+          buttonInv.removeAttribute("style");
+      };         
+      console.log(img);  // Test modified value
+    }
+    
+    //   INPUT ONCHANGE //
+    
+    var fileNbr = 0;
+    input.onchange = function (fileNbr) {
+        // Initial state
+        
+        // "this.files" is tricky to sort... => google search string = "sort objects by names javascript"
+        // Got it From 3rd result : 
+        //    https://stackoverflow.com/questions/1424196/how-to-sort-javascript-object-array-by-element-name
+        //
+        var filesSorted = [].slice.call(this.files).sort(function(a, b) { return 2 * (a.name > b.name) - 1; });
+        
+        console.log(filesSorted[0]);
+        console.log(filesSorted[1]);
+                
+        var file = filesSorted[fileNbr];
+        if (file == null) { fileNbr = 0 };        
+        fileInputNbr = fileNbr;  // Can be the same thing eventually...
+        
+        // GoFullScreen(audio);  // Guess It !
+	
+       audio.load();      // Allows 2d inputs (1+n) to load & start correctly in <audio
+        
+        // INFO : virtual full path is "C:\fakepath\<name of chosen file>" !!! 
+        //        =>> Can't save ! See console output ! (idem for BLOB file)
+        console.log(input.value);
+        
+        // Construction of audio inner <source src=...
+        //file = this.files[fileNbr];   // is tmp BLOB from/not real file (can't save/re-use - I dunno how...)
+        file = filesSorted[fileNbr];
+        var url = URL.createObjectURL(file);               
+        audio.innerHTML = '<source id="myAudioSrc" src="' + url + '">';
+                    // <Using <pre> tag to insert many spaces   // this.files[FileNbr].name;
+        fileName.innerHTML = "<pre>  ---  </pre>" + "File name : " + file.name + "<pre>  ---  </pre>"; 
+        console.log(fileName);
+        // kept here (and at load time) for re-inputs after window resizne
+        audio.setAttribute("width", window.innerWidth + 'px');
+               
+        console.log(audio);  // Test modifications of <audio element (DR)
+    }
+      /*    
+    function getFileExtension (filename) {
+    	return filename.split('.').pop();
+    } */
+    
+    // Same as above input for 2 local images files input ( few checks... )    
+    input2.onchange = function () {
+        // I like slices...
+        var filesVar = [].slice.call(this.files);
+        
+        var file1 = filesVar[0];
+        var file2 = filesVar[1];
+        if (file2 == null) { file2 = file1 };        
+                
+        console.log(input2.value);  // Test
+        
+        console.log(file1);
+        console.log(file2);
+
+        // Assign files to img vars (globals)
+        srcImgBckgrd = URL.createObjectURL(file1); 
+        backImg = URL.createObjectURL(file2);               
+
+	console.log(srcImgBckgrd);
+        console.log(backImg);
+
+	// Apply for "normal backgound : <img>"
+        img.setAttribute("src", srcImgBckgrd);
+        
+	// Apply for backdrop backround-image
+	selectorsAdded = ['#myAudio::backdrop{background-image : url("'   // at this moment
++ backImg + '");opacity: 1.00;border: #800 solid 2px;}'];    
+	selectorsAddedInv = ['#myAudio::backdrop{background-image : url("'                           // at this moment
++ backImg + '");opacity: 1.00;border: #800 solid 2px;-webkit-filter: invert(1); filter:invert(1);}'];
+        AddStyleToMain(selectorsAdded);
+        
+        // Fresh restart (Still useful/effective ?)
+        GoFullScreen(audio); 	
+        audio.load();
+    }
+    
+    
+    
+    
+    // Fixed values for audio ( defined when loading or re-loading the whole web page )
+    
+    window.onload = function() {
+  	audio.setAttribute("width", window.innerWidth + 'px');  // always the same... (mine ~ 1360px)
+    } 
+
+    // BUTTONS EVENTS
+
+    buttonNxt.onclick = function () {                // Next button
+   	fileInputNbr = fileInputNbr + 1;
+   	console.log(fileInputNbr);
+   	input.onchange(fileInputNbr);
+    }
+   
+    buttonPrv.onclick = function () {                // Prev button
+   	fileInputNbr = fileInputNbr - 1;
+   	console.log(fileInputNbr);
+   	input.onchange(fileInputNbr);
+    }
+    
+    buttonHid.onclick = function HideFooter() {  // HIDE BUTTONS MENU ( press h to unhide ! )
+    	var display = myFooter.style.display;
+    	if(display=="none")
+        	myFooter.style.display="block";
+    	else
+        	myFooter.style.display="none";
+    }
+    
+    buttonAut.onclick = function () {                // Auto Read button
+   	autoReadAudios = !(autoReadAudios);
+        autoReadAudios ? buttonAut.setAttribute("style","color: green; font-weight: bold;") : buttonAut.removeAttribute("style");
+        console.log(autoReadAudios);
+   	console.log(buttonAut);
+    }
+    
+    var audioOpacity = 1.00;
+    var backOpacity = 0.24;
+    var backOnOff = new Boolean(true);
+    
+    document.onkeyup=function(e) {         // Shortcuts NEXT/PREV and demonstrate use of $("#id") is JQuery Only.
+    	var e = e || window.event;
+  	if (e.key == "b") {			// "b" pressed (previous audio)
+    		buttonPrv.click();
+  	} else if (e.key == "n") {		// "n" pressed (next audio) 
+    		buttonNxt.click();
+    	} else if (e.key == "h") {		// "h" pressed (unhide/hide buttons)
+    		buttonHid.click(); 
+    	} else if (e.key == "s") {		// "s" pressed (Select audios input) 
+    		buttonInp.click();
+    	} else if (e.key == "i") {		// "i" pressed (invert background color)event.shiftKey
+    		buttonInv.click(); 
+    	} else if (e.key == "o") {		// "o" undocumented ( decrease audio opacity : for fullscreen )
+    		audioOpacity = audioOpacity - 0.06;
+    		audio.setAttribute("style", 'opacity: ' + audioOpacity);
+    		console.log(audio);
+    	} else if (e.key == "Shift") { 		// "Shift" undocumented ( unset audio opacity )
+    		audioOpacity = 1.00;
+    		audio.setAttribute("style", 'opacity: ' + audioOpacity);
+    		console.log(audio);
+    	} else if (e.key == "p") {		// "p" undocumented ( decrease background img opacity )
+    		backOpacity = backOpacity - 0.04;
+    		backRoot.setAttribute("style", 'opacity: ' + backOpacity);
+    		console.log(audio);       
+                         // "Ctrl" undocumented ( reset backgrnd img on top ! or to default alterntively !!! )
+    	} else if (e.key == "Control") {  
+    		backOnOff === true ? backOpacity = 1.00 : backOpacity = 0.24;
+    		backOnOff = !(backOnOff);      // Use "p" to attenuate "top" Please and "- Keep Control !!!"
+    		backRoot.setAttribute("style", 'opacity: ' + backOpacity);  // NB : Useless on fullscreen !IMPORTANT
+    		console.log(audio);
+    	} else if (e.key == "j") {
+    		// Reset <style> in <main> // Cf functions definitions later...
+    		DelStyleToMain();  
+    		invBck === true ? AddStyleToMain(selectorsAddedInv) : AddStyleToMain(selectorsAdded);
+    		invBck = !(invBck);    
+    		console.log(bckInv);
+    	} else if (e.key == "d") {
+    		buttonIn2.click();
+    	} else if (e.key == "a") {
+    		buttonAut.click();
+    	}
+    }
+
+    // Auto reading implementation ( alsmost !like "utu B" ) 
+    audio.addEventListener('ended', myAutoRead, false);    // Not sync ! (I think)
+    
+    function myAutoRead(e) {
+        autoReadAudios ? buttonNxt.click() : {} ;  // TODO: Should give it a "bounced" pause with a timer in between... 
+    }
+
+    // I just have created my first (standing alone) JS function !
+    
+    function GoFullScreen(element) {
+    	// Go Fullscreen (tries - no IE case :P )
+        var el = element
+   	 , rfs = // for newer Webkit and Firefox
+           el.requestFullscreen
+        || el.webkitRequestFullScreen
+        || el.mozRequestFullScreen
+        || el.msRequestFullscreen;
+	if(typeof rfs!="undefined" && rfs){
+  		rfs.call(el);
+	}
+    }
+    
+                   // **************************************************************** //
+                   // DONT FORGET TO TRY "SLOW MOTION DOUBLE CLICK"[R] : Click...Click //
+                   // **************************************************************** //
+     // Some tries for default opacity values depending on Fullscreen status (& double-clicks)
+ // //( despite an fs detection not quite reliable, it works in all cases (except if you strike Ctrl key twice...)
+///       ^   ^    ^      ^^      ^    ^         ^   ^    ^^    -       ^   --  - --POO-R ---S-RH---Y-M-I-N-G PATTERNS !
+     
+    fsBool = false;
+    
+    window.onchange = function () { 
+    	if (!window.screenTop && !window.screenY) {       // That's a bit too global (should limit on audio) => NO !
+ 	 // it's fullscreen!
+	audio.setAttribute("style", 'opacity: ' + 0.80);
+	fsBool = true;
+    	} else {
+	audio.setAttribute("style", 'opacity: ' + 1.00);
+    	}
+     } 
+     
+     addEventListener("dblclick", (event) => {});   // Double clicks (NB: No Bounce neither Throttle timer-ed functions)
+                                                    // swap between fullscreen or not fullscreen (the Question !)
+     ondblclick = (event) => {			// NB: If inverted do fast repeated clicks will re-order IT ! (sorry)
+     	fsBool ? audio.setAttribute("style", 'opacity: ' + 0.80)
+     	       : audio.setAttribute("style", 'opacity: ' + 1.00);
+     	fsBool = !(fsBool);
+     	};
+    
+    //                                                                                            //
+    //    MIGRATED FROM STATIC CSS DEFINITIONS ( those that need to be changed eventually ! )     //
+    //                                                                                            //
+    // DR - April 2023 - Found here : https://codepen.io/Realto619/pen/RwMvNrj?editors=0010       //
+    //                                                                                            //
+
+    // TODO: Input both (1 more button on top right corner)    
+    var backImg = "../img2/Wallpaper_Imagine_04_DR.webp"; 
+    // Array of texts with selectors and their attributes:values 
+    var selectorsAdded = ['#myAudio::backdrop{background-image : url("'   // at this moment
++ backImg + '");opacity: 1.00;border: #800 solid 2px;}'];                   // single
+    // For when invert of background backdrop image is required ( shortcut = "j" )
+    var selectorsAddedInv = ['#myAudio::backdrop{background-image : url("'                           // at this moment
++ backImg + '");opacity: 1.00;border: #800 solid 2px;-webkit-filter: invert(1); filter:invert(1);}'];  // single
+
+    // Once !   ( "- SURPRISE !!!" : Should appear at begining of JS code section as other "vars declaraions" )
+    const main = document.querySelector("main"); // QuerySelector */
+    const addStyle = document.createElement("style");
+         
+    function AddStyleToMain(selectorsAdded) {      
+      // TODO: Append array of selectors...
+      addStyle.innerHTML  = selectorsAdded[0];    
+//    addStyle.innerHTML += '#myAudio:hover{border: #800 solid 5px;}'; // For testing (reduce audio scale :P!)      
+      main.appendChild(addStyle);  // Add style section after main !!!
+      console.log(main);  // Check !
+    }
+    
+    function DelStyleToMain() {
+      main.removeChild(addStyle);
+    }
+    
+    // Initially Backdrop Image is not inverted
+    var invBck = false;
+    
+    // Apply appended "style" to main
+    AddStyleToMain(selectorsAdded);
+    
+  </script>
+  
+  <!--*************************************STYLES**************************************************-->
+  
+  <style>                       /* Optionnals attributes : type="text/css" media="screen" */
+    body {
+    	margin: 0;  /* Overrides default 8px... */
+    	overflow: scroll;
+    }
+    #root_container_overlay {      /* 1st div background */
+    	pointer-events: none;
+    	width: 100vw;
+    	height: 100vh;
+    	position: fixed;
+    	opacity: 0.24;
+    	z-index: 1000000;
+    	display: flex;
+    	top: 0px;
+    	left: 0px;
+    }
+    div div {                      /* 2d div background */
+    	flex-grow: 1;
+    }
+    #myBackgroundImg {             /* <img tag */
+    	width: 100%;
+    	height: 100%;
+    	object-fit: cover;       /* Same as default for bakground-img prop -- was => object-fit: contain;  */
+    }
+    p , pre {                 /* File texts - after/next to buttons */
+        position: absolute;   /* Replaced "display: inline;" removed : Cant cut file name when resizing window */
+        top: -15px;           /* ISSUE : When duplicating read_audio tab and resizing full screen sized window,*/
+        left: 700px;          /* the file text ( and "pre" deco ) are auto-wrapped on (added) 2d line = HS !!! */
+        white-space: nowrap;  /* No new line is neeed when viewing 2 audios in parallel mode, reduce height! (//) */
+  	overflow: hidden;     /* Usually duplicating involves seing/snapshooting 2 different images of same audio*/  
+    }			      /* PS: "pre" decoration is hidden (under <p>) ! (to be removed...)
+                              /* PS2: "- I HATE AUTO-WRAPPING !!!" - DR */
+/* Useless ?!.. */
+/*    @media screen /* and (min-width: 0) and (max-width: 991px) */ /* { 
+   	  overflow: scroll;
+    } */
+    
+    /*^^^ MIGRATED IN JS part above (COMMENTS STILL APPLIES) ^^^*/
+/*    audio::backdrop {    /* Fullscreen with background image preserved or redefined (1/2) */
+/*   	opacity: 1.0;      /* reduce to see other background img : 1.0 to see exclusively this img */ 
+/*  	background-image : url("../img2/Wallpaper_Imagine_04_DR.webp"); /* Static "- At this moment..." */
+/*    } */
+    /*^^^ MIGRATED IN JS part above (COMMENTS STILL APPLIES) ^^^*/
+/*    audio {	    /* Fullscreen with background image preserved - lighten contents ! (2/2) */  
+/*    	opacity: 1.0;	 /* OK reduce to see other img-s - or use "o" key (OK ?!..) or SHIFT = 1.0 */
+/*    }		/* in backdrop mode (fullscreen) enhance 2d background image (defined in upper selector) 
+    	
+  </style>
+</html>
